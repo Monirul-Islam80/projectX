@@ -14,11 +14,22 @@ class User {
     );
     return result;
   }
+  static async findAllUser() {
+    const [row] = await db.execute("SELECT * FROM users");
+    return row;
+  }
   static async findByEmail(email) {
     const [row] = await db.execute("SELECT * FROM users WHERE email = ?", [
       email,
     ]);
     return row[0];
+  }
+  static async findUserById(id) {
+    const [rows] = await db.execute("SELECT * FROM users WHERE id = ?", [id]);
+    return rows[0];
+  }
+  static async deleteUser(id) {
+    await db.execute("DELETE FROM users WHERE id = ?", [id]);
   }
 }
 

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Post</title>
+  </head>
+  <body>
+    <form id="postForm">
+      <input
+        type="text"
+        id="title"
+        name="title"
+        placeholder="Title"
+        value="post 2"
+        required
+      /><br />
+      <input
+        type="text"
+        id="keywords"
+        name="keywords"
+        value="post post post"
+        placeholder="Keywords"
+      /><br />
+      <textarea
+        id="content"
+        name="content"
+        value="update test"
+        defaultvalue="update test"
+        placeholder="Content"
+        required
+      ></textarea
+      ><br />
+      <input
+        type="text"
+        id="source"
+        name="source"
+        value="prothomalo/https://prothomalo.com"
+        placeholder="source"
+      /><br />
+      <input type="text" id="lang" name="lang" value="eng" /><br />
+      <input type="file" id="image" name="image" /><br />
+      <button type="submit">Create Post</button>
+    </form>
+
+    <script>
+      document
+        .getElementById("postForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const formData = new FormData();
+          formData.append("title", document.getElementById("title").value);
+          formData.append("source", document.getElementById("source").value);
+          formData.append(
+            "keywords",
+            document.getElementById("keywords").value
+          );
+          formData.append("content", document.getElementById("content").value);
+          formData.append("language", document.getElementById("lang").value);
+          console.log(document.getElementById("image").files[0]);
+          formData.append("image", document.getElementById("image").files[0]);
+          try {
+            const response = await fetch(
+              "http://localhost:5000/otherside/posts/createpost",
+              {
+                method: "post",
+                headers: {
+                  Authorization:
+                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImFkbWluIiwiaWF0IjoxNzE5ODYzODgzfQ.FMWLr3M5AAjfDmoz8tY4nh9yRUw5vvO7Fs6NNF-dAsE", // Replace with your JWT token
+                },
+                body: formData,
+              }
+            );
+            console.log(response);
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+
+            const result = await response.json();
+            window.alert(result);
+            console.log("Post created successfully:", result);
+          } catch (error) {
+            console.error("Error creating post:", error);
+          }
+        });
+    </script>
+  </body>
+</html>
